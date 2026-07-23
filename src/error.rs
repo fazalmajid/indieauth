@@ -30,6 +30,16 @@ pub fn javascript(body: &'static str) -> Resp {
         .expect("valid response")
 }
 
+/// Same nosniff reasoning as `javascript`, but for the stylesheet.
+pub fn css(body: &'static str) -> Resp {
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "text/css; charset=utf-8")
+        .header(header::CACHE_CONTROL, "public, max-age=3600")
+        .body(Full::new(Bytes::from_static(body.as_bytes())))
+        .expect("valid response")
+}
+
 pub fn json(status: StatusCode, value: serde_json::Value) -> Resp {
     let body = serde_json::to_vec(&value).expect("value always serializes");
     Response::builder()

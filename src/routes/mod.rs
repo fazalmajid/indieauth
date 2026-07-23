@@ -9,7 +9,7 @@ mod token;
 use http::{Method, Request};
 use hyper::body::Incoming;
 
-use crate::error::{Resp, javascript, not_found};
+use crate::error::{Resp, css, javascript, not_found};
 use crate::state::AppState;
 
 pub async fn dispatch(req: Request<Incoming>, state: &AppState) -> Resp {
@@ -18,6 +18,7 @@ pub async fn dispatch(req: Request<Incoming>, state: &AppState) -> Resp {
 
     match (method, path.as_str()) {
         (Method::GET, "/.well-known/oauth-authorization-server") => metadata::get(state),
+        (Method::GET, "/auth/static/style.css") => css(include_str!("../../static/style.css")),
         (Method::GET, "/auth/static/webauthn-common.js") => {
             javascript(include_str!("../../static/webauthn-common.js"))
         }

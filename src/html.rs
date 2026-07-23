@@ -12,6 +12,11 @@ pub fn escape(s: &str) -> String {
         .replace('\'', "&#39;")
 }
 
+/// No inline `<style>` -- a `Content-Security-Policy` with no explicit
+/// `style-src` falls back to `default-src` for styles too, and blocks
+/// inline style the exact same way it blocks inline script (see
+/// `ceremony_scripts`'s doc comment). An external, same-origin stylesheet
+/// is allowed by a plain `'self'`.
 fn page(title: &str, body: &str) -> String {
     format!(
         r#"<!doctype html>
@@ -20,14 +25,7 @@ fn page(title: &str, body: &str) -> String {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
-<style>
-  body {{ font-family: system-ui, sans-serif; max-width: 32rem; margin: 4rem auto; padding: 0 1rem; color: #1a1a1a; }}
-  button {{ font-size: 1rem; padding: 0.6rem 1.2rem; cursor: pointer; }}
-  .client {{ border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin: 1rem 0; }}
-  .actions {{ display: flex; gap: 0.75rem; }}
-  .deny {{ background: #eee; }}
-  code {{ word-break: break-all; }}
-</style>
+<link rel="stylesheet" href="/auth/static/style.css">
 </head>
 <body>
 {body}
@@ -139,12 +137,12 @@ pub fn credentials_page(creds: &[CredentialSummary]) -> String {
             format!(
                 r#"<li>
   <strong>{label}</strong> -- registered {created}, last used {last_used}
-  <form method="post" action="/auth/credentials/rename" style="display:inline">
+  <form method="post" action="/auth/credentials/rename" class="inline-form">
     <input type="hidden" name="credential_id" value="{id}">
     <input type="text" name="label" value="{label_attr}" placeholder="e.g. YubiKey 5">
     <button type="submit">Rename</button>
   </form>
-  <form method="post" action="/auth/credentials/delete" style="display:inline">
+  <form method="post" action="/auth/credentials/delete" class="inline-form">
     <input type="hidden" name="credential_id" value="{id}">
     <button type="submit" {disabled}>Remove</button>
   </form>

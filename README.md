@@ -84,7 +84,11 @@ same site. It only needs two things proxied to it: the `/auth/` prefix
 and the metadata well-known path. An nginx example:
 
 ```nginx
-location /auth/ {
+# ^~ matters if your site has a regex location for static-asset extensions
+# (e.g. `location ~* \.(js|css|...)$ { ... }`, common for cache headers) --
+# regex locations otherwise take priority over a plain prefix match and
+# will 404 requests for /auth/static/*.js|css instead of proxying them.
+location ^~ /auth/ {
     proxy_pass          http://unix:/var/run/indieauth/indieauth.sock:;
     proxy_set_header     Host $host;
     proxy_set_header     X-Forwarded-Proto https;
