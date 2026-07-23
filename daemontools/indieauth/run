@@ -7,7 +7,11 @@
 
 exec 2>&1
 
-mkdir -p /var/run/indieauth
-chown indieauth:indieauth /var/run/indieauth
+# Self-heal both directories indieauth needs on every start, not just the
+# socket dir -- otherwise a missing /var/lib/indieauth (e.g. before the
+# one-time manual setup, or if it's ever wiped) crash-loops instead of
+# recovering.
+mkdir -p /var/run/indieauth /var/lib/indieauth
+chown indieauth:indieauth /var/run/indieauth /var/lib/indieauth
 
 exec envdir ./env setuidgid indieauth /usr/local/bin/indieauth

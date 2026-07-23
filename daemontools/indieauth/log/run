@@ -2,4 +2,7 @@
 # svscan starts this automatically as indieauth's log service: supervise
 # pipes the main run script's stdout/stderr into this one's stdin.
 
+mkdir -p /var/log/indieauth
+chown indieauth-log:indieauth-log /var/log/indieauth
+
 exec setuidgid indieauth-log multilog t /var/log/indieauth

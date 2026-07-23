@@ -38,18 +38,13 @@ indieauth/
    adduser -D -H -s /sbin/nologin indieauth-log
    ```
 
-3. Create the data and log directories:
+3. Edit `indieauth/env/*` to match your actual domain (the checked-in
+   values are placeholders -- `example.com`). `DATABASE_PATH`'s
+   directory, the socket's directory, and the log directory are all
+   created (and chowned) automatically by `run`/`log/run` on every
+   start, so no manual `mkdir`/`chown` step is needed for those.
 
-   ```
-   mkdir -p /var/lib/indieauth /var/log/indieauth
-   chown indieauth:indieauth /var/lib/indieauth
-   chown indieauth-log:indieauth-log /var/log/indieauth
-   ```
-
-4. Edit `indieauth/env/*` to match your actual domain (the checked-in
-   values are placeholders -- `example.com`).
-
-5. Copy or symlink this `indieauth/` directory into wherever your
+4. Copy or symlink this `indieauth/` directory into wherever your
    `svscan` watches (commonly `/service/` for a stock djb daemontools
    install; adjust to your setup):
 
