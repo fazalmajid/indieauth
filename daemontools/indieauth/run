@@ -1,0 +1,13 @@
+#!/bin/sh
+# daemontools run script for indieauth.
+#
+# Runs with the service directory as cwd, so `./env` refers to the envdir
+# alongside this script. Uses djb daemontools' own tools -- envdir and
+# setuidgid -- not runit's chpst.
+
+exec 2>&1
+
+mkdir -p /var/run/indieauth
+chown indieauth:indieauth /var/run/indieauth
+
+exec envdir ./env setuidgid indieauth /usr/local/bin/indieauth
