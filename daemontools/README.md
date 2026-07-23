@@ -23,13 +23,16 @@ indieauth/
 1. Build the release binary and install it:
 
    ```
-   cargo build --release
+   make release
    install -m 755 target/release/indieauth /usr/local/bin/indieauth
    ```
 
-   If your OpenSSL is in a nonstandard location, set `OPENSSL_DIR`
-   (and possibly `RUSTFLAGS="-C link-arg=-Wl,-rpath,<path>/lib"`) when
-   building.
+   The `Makefile` derives `OPENSSL_DIR` (and a matching rpath) from
+   `openssl version -a` at build time, so this works unmodified on a
+   machine with OpenSSL in a nonstandard location -- adjust `PREFIX` in
+   the `Makefile` if `pkg-config` also needs a nonstandard path. If your
+   OpenSSL is already in a standard system location, plain
+   `cargo build --release` works too.
 
 2. Create dedicated users (no login shell needed):
 
