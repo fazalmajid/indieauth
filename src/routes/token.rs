@@ -69,14 +69,28 @@ pub async fn post(req: Request<Incoming>, state: &AppState) -> Resp {
         .await
         .expect("failed to store access token");
 
-    json(
-        StatusCode::OK,
-        serde_json::json!({
-            "access_token": token,
-            "token_type": "Bearer",
-            "scope": redeemed.scope,
-            "me": redeemed.me,
-            "expires_in": ACCESS_TOKEN_TTL_HOURS * 3600,
-        }),
-    )
+    let mut response = serde_json::json!({
+        "access_token": token,
+        "token_type": "Bearer",
+        "scope": redeemed.scope,
+        "me": redeemed.me,
+        "expires_in": ACCESS_TOKEN_TTL_HOURS * 3600,
+    });
+
+    // The `profile` object is spec-optional and its content is entirely up
+    // to the server; only included when the client actually asked for it
+    // via the `profile` scope. `name`/`photo` are each omitted individually
+    // if not configured, rather than sent empty.
+    if redeemed.scope.split_whitespace().any(|s| s == "profile") {
+        let mut profile = serde_json::json!({ "url": redeemed.me });
+        if let Some(name) = &state.config.owner_name {
+            profile["name"] = serde_json::json!(name);
+        }
+        if let Some(photo) = &state.config.owner_photo_url {
+            profile["photo"] = serde_json::json!(photo);
+        }
+        response["profile"] = profile;
+    }
+
+    json(StatusCode::OK, response)
 }

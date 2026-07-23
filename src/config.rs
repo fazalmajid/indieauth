@@ -23,6 +23,14 @@ pub struct Config {
     /// The canonical profile URL ("me") this server issues on
     /// successful login, e.g. "https://example.com/".
     pub owner_me: String,
+    /// Display name returned in the `profile` object when a token request
+    /// includes the `profile` scope (e.g. so IndieWeb sites can show
+    /// "Fazal Majid" instead of the bare profile URL). Omitted from the
+    /// response if unset.
+    pub owner_name: Option<String>,
+    /// Photo/avatar URL returned in the `profile` object under the same
+    /// conditions -- e.g. a Gravatar URL. Omitted if unset.
+    pub owner_photo_url: Option<String>,
     /// Where to listen -- a unix socket path or a TCP address, from
     /// `BIND_ADDR` (a `unix:` prefix selects the unix-socket variant).
     pub bind_addr: BindAddr,
@@ -49,6 +57,8 @@ impl Config {
             rp_origin: require("RP_ORIGIN"),
             issuer: require("ISSUER_URL"),
             owner_me: require("OWNER_ME_URL"),
+            owner_name: env::var("OWNER_NAME").ok(),
+            owner_photo_url: env::var("OWNER_PHOTO_URL").ok(),
             bind_addr,
             bootstrap_secret: env::var("BOOTSTRAP_SECRET").ok(),
         }

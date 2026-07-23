@@ -55,6 +55,8 @@ Everything is configured via environment variables (no config file):
 | `RP_ORIGIN`        | `https://example.com`          | WebAuthn origin. Must share a registrable domain with `RP_ID`. |
 | `ISSUER_URL`       | `https://example.com`          | IndieAuth issuer, published in metadata and the `iss` param. |
 | `OWNER_ME_URL`     | `https://example.com/`         | The profile URL ("me") this server asserts on login. |
+| `OWNER_NAME`       | `Jane Doe`                     | Optional. Returned in the `profile` object when a client requests the `profile` scope (e.g. so IndieWeb sites show your name instead of the bare URL). Omitted if unset. |
+| `OWNER_PHOTO_URL`  | `https://www.gravatar.com/avatar/<hash>` | Optional. Same as above, for a photo/avatar. |
 | `BIND_ADDR`        | `unix:/var/run/indieauth/indieauth.sock` or `0.0.0.0:8787` | `unix:`-prefixed for a socket, otherwise a TCP address. |
 | `BOOTSTRAP_SECRET` | *(unset by default)*           | One-time secret to register your first passkey -- see below. |
 

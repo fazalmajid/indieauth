@@ -52,6 +52,11 @@ indieauth/
    created (and chowned) automatically by `run`/`log/run` on every
    start, so no manual `mkdir`/`chown` step is needed for those.
 
+   Optionally add `env/OWNER_NAME` and `env/OWNER_PHOTO_URL` (not checked
+   in, since there's no sensible placeholder) if you want IndieWeb sites
+   requesting the `profile` scope to show your name/photo instead of the
+   bare profile URL -- see the main README's config table.
+
 4. Copy or symlink this `indieauth/` directory into wherever your
    `svscan` watches (commonly `/service/` for a stock djb daemontools
    install; adjust to your setup):

@@ -31,5 +31,7 @@ target
 hugo.conf
 hugo.conf.bak
 sechdr.conf
+sechdr.conf.bak
 majid.info.conf
 majid.info.conf.bak
+url.conf
