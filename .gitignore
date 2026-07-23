@@ -19,3 +19,15 @@ target
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# Runtime state: real credentials, sessions, tokens, logs -- never commit.
+/data/
+
+# Debugging capture files -- large, and can contain cookies/tokens.
+*.har
+
+# Site-specific reverse-proxy / security-header config -- deployment
+# detail for a specific site, not part of the server itself.
+hugo.conf
+hugo.conf.bak
+sechdr.conf
