@@ -27,12 +27,17 @@ indieauth/
    install -m 755 target/release/indieauth /usr/local/bin/indieauth
    ```
 
-   The `Makefile` derives `OPENSSL_DIR` (and a matching rpath) from
-   `openssl version -a` at build time, so this works unmodified on a
-   machine with OpenSSL in a nonstandard location -- adjust `PREFIX` in
-   the `Makefile` if `pkg-config` also needs a nonstandard path. If your
-   OpenSSL is already in a standard system location, plain
-   `cargo build --release` works too.
+   `openssl` (the Rust crate used by `webauthn-rs-core`) builds with its
+   `vendored` feature, compiling and statically linking a known-good
+   OpenSSL from source rather than depending on whatever OpenSSL happens
+   to be installed on the machine. This needs a C compiler and `perl` on
+   the build machine (which you already need for `rusqlite`'s bundled
+   SQLite), but means the resulting binary has no runtime OpenSSL
+   dependency at all -- confirmed via `ldd`, no `libssl`/`libcrypto` in
+   the output. This matters in practice: a custom/very new OpenSSL build
+   (e.g. an early 4.x) can be ABI-incompatible with the `openssl-sys`
+   bindings in ways that compile fine but crash at runtime with a NULL
+   function-pointer call -- vendoring sidesteps that entirely.
 
 2. Create dedicated users (no login shell needed):
 
